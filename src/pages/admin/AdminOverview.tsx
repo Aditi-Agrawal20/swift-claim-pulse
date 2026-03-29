@@ -39,7 +39,7 @@ const weeklyData = [
   { day: 'Sun', count: 1 },
 ];
 
-const [statusFilter, setStatusFilter] = ['all', () => {}]; // placeholder for state
+
 
 const AdminOverview = () => {
   const [filter, setFilter] = React.useState('all');
