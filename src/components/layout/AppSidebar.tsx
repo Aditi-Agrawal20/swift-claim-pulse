@@ -26,9 +26,9 @@ const navItems: Record<Role, { label: string; path: string; icon: React.ElementT
 };
 
 const roleColors: Record<Role, string> = {
-  admin: 'from-purple-500 to-violet-400',
-  manager: 'from-blue-500 to-cyan-400',
-  employee: 'from-emerald-400 to-teal-400',
+  admin: 'bg-primary text-primary-foreground',
+  manager: 'bg-info text-info-foreground',
+  employee: 'bg-success text-success-foreground',
 };
 
 const roleLabels: Record<Role, string> = {
@@ -52,19 +52,14 @@ export const AppSidebar = () => {
   };
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-64 bg-layer-1 border-r border-border flex flex-col z-50">
-      {/* Ambient glow behind logo */}
-      <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 200px 120px at 50% 0%, hsl(164 100% 45% / 0.08) 0%, transparent 70%)',
-      }} />
-
+    <aside className="fixed left-0 top-0 bottom-0 w-64 bg-card border-r border-border flex flex-col z-50">
       {/* Logo */}
-      <div className="px-6 py-6 relative">
+      <div className="px-6 py-6">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <Zap className="w-4 h-4 text-primary-foreground" strokeWidth={2.5} />
           </div>
-          <span className="font-display font-bold text-lg gradient-text-accent">ClearClaim</span>
+          <span className="font-display font-bold text-lg text-foreground">ClearClaim</span>
         </div>
       </div>
 
@@ -78,14 +73,14 @@ export const AppSidebar = () => {
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body transition-all duration-150 relative group ${
                 isActive
-                  ? 'text-foreground bg-primary/10'
+                  ? 'text-primary bg-accent font-medium'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="sidebar-active"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-gradient-to-b from-emerald-400 to-cyan-500"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary"
                 />
               )}
               <item.icon className="w-4 h-4" strokeWidth={1.5} />
@@ -111,10 +106,8 @@ export const AppSidebar = () => {
           onClick={handleRoleSwitch}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body transition-all group hover:bg-muted/50"
         >
-          <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${roleColors[role]} flex items-center justify-center`}>
-            <span className="text-xs font-bold text-primary-foreground">
-              {roleLabels[role][0]}
-            </span>
+          <div className={`w-7 h-7 rounded-full ${roleColors[role]} flex items-center justify-center`}>
+            <span className="text-xs font-bold">{roleLabels[role][0]}</span>
           </div>
           <div className="flex-1 text-left">
             <div className="text-xs text-foreground font-medium">Demo User</div>
