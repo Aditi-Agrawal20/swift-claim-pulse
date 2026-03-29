@@ -3,9 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Users, GitBranch, Receipt, Clock,
-  FileText, UsersRound, LogOut, Sun, Moon, Zap
+  FileText, UsersRound, LogOut, Sun, Moon, Zap, Building2, Eye
 } from 'lucide-react';
-import { useRole, Role } from '@/hooks/useRole';
+import { useRole, Role, roleColors, roleLabels } from '@/hooks/useRole';
 import { useTheme } from '@/hooks/useTheme';
 
 const navItems: Record<Role, { label: string; path: string; icon: React.ElementType }[]> = {
@@ -13,7 +13,6 @@ const navItems: Record<Role, { label: string; path: string; icon: React.ElementT
     { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Team', path: '/dashboard/team', icon: Users },
     { label: 'Approval Rules', path: '/dashboard/rules', icon: GitBranch },
-    { label: 'All Expenses', path: '/dashboard/expenses', icon: Receipt },
   ],
   employee: [
     { label: 'Submit Expense', path: '/dashboard', icon: FileText },
@@ -23,18 +22,14 @@ const navItems: Record<Role, { label: string; path: string; icon: React.ElementT
     { label: 'Pending Approvals', path: '/dashboard', icon: Clock },
     { label: 'Team Overview', path: '/dashboard/team-overview', icon: UsersRound },
   ],
-};
-
-const roleColors: Record<Role, string> = {
-  admin: 'bg-primary text-primary-foreground',
-  manager: 'bg-info text-info-foreground',
-  employee: 'bg-success text-success-foreground',
-};
-
-const roleLabels: Record<Role, string> = {
-  admin: 'Admin',
-  manager: 'Manager',
-  employee: 'Employee',
+  finance: [
+    { label: 'Pending Approvals', path: '/dashboard', icon: Clock },
+    { label: 'All Expenses', path: '/dashboard/all-expenses', icon: Receipt },
+  ],
+  director: [
+    { label: 'Pending Approvals', path: '/dashboard', icon: Clock },
+    { label: 'Company Overview', path: '/dashboard/company-overview', icon: Building2 },
+  ],
 };
 
 export const AppSidebar = () => {
@@ -43,28 +38,29 @@ export const AppSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const items = navItems[role];
+  const color = roleColors[role];
 
   const handleRoleSwitch = () => {
-    const roles: Role[] = ['admin', 'manager', 'employee'];
+    const roles: Role[] = ['admin', 'manager', 'employee', 'finance', 'director'];
     const next = roles[(roles.indexOf(role) + 1) % roles.length];
     setRole(next);
     navigate('/dashboard');
   };
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-64 bg-card border-r border-border flex flex-col z-50">
+    <aside className="fixed left-0 top-0 bottom-0 w-[220px] bg-layer-1 border-r border-border flex flex-col z-50">
       {/* Logo */}
-      <div className="px-6 py-6">
+      <div className="px-5 py-5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <Zap className="w-4 h-4 text-primary-foreground" strokeWidth={2.5} />
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: color, boxShadow: `0 0 40px ${color}20` }}>
+            <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
           </div>
           <span className="font-display font-bold text-lg text-foreground">ClearClaim</span>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 mt-2 space-y-1">
+      <nav className="flex-1 px-3 mt-2 space-y-0.5">
         {items.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -73,14 +69,19 @@ export const AppSidebar = () => {
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body transition-all duration-150 relative group ${
                 isActive
-                  ? 'text-primary bg-accent font-medium'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                  ? 'font-medium'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
+              style={isActive ? {
+                background: `${color}12`,
+                color: color,
+              } : undefined}
             >
               {isActive && (
                 <motion.div
                   layoutId="sidebar-active"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full"
+                  style={{ background: `linear-gradient(180deg, ${color}, ${color}80)` }}
                 />
               )}
               <item.icon className="w-4 h-4" strokeWidth={1.5} />
@@ -91,22 +92,21 @@ export const AppSidebar = () => {
       </nav>
 
       {/* Bottom section */}
-      <div className="px-3 pb-4 space-y-2">
-        {/* Theme toggle */}
+      <div className="px-3 pb-4 space-y-1">
         <button
           onClick={toggleTheme}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-body text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
         >
           {theme === 'dark' ? <Sun className="w-4 h-4" strokeWidth={1.5} /> : <Moon className="w-4 h-4" strokeWidth={1.5} />}
           <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
         </button>
 
-        {/* Role switcher */}
+        {/* User / role switcher */}
         <button
           onClick={handleRoleSwitch}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body transition-all group hover:bg-muted/50"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-body transition-all group hover:bg-muted/30"
         >
-          <div className={`w-7 h-7 rounded-full ${roleColors[role]} flex items-center justify-center`}>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${color}20`, color: color, boxShadow: `0 0 0 2px ${color}40` }}>
             <span className="text-xs font-bold">{roleLabels[role][0]}</span>
           </div>
           <div className="flex-1 text-left">
@@ -115,10 +115,9 @@ export const AppSidebar = () => {
           </div>
         </button>
 
-        {/* Logout */}
         <button
           onClick={() => { setIsLoggedIn(false); navigate('/'); }}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-body text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-body text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
         >
           <LogOut className="w-4 h-4" strokeWidth={1.5} />
           <span>Logout</span>

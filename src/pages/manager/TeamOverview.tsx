@@ -18,7 +18,7 @@ const TeamOverview = () => {
 
   return (
     <div>
-      <PageHeader title="Team Overview" subtitle="Expense summary across your team" gradient="blue" />
+      <PageHeader title="Team Overview" subtitle="Expense summary across your team" />
 
       {/* Summary pills */}
       <div className="flex gap-4 mb-8">

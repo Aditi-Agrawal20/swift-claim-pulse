@@ -6,14 +6,17 @@ import { RoleProvider, useRole } from "@/hooks/useRole";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { AppLayout } from "@/components/layout/AppLayout";
 import LoginPage from "@/pages/LoginPage";
+import SetupPage from "@/pages/SetupPage";
+import ChangePasswordPage from "@/pages/ChangePasswordPage";
 import AdminOverview from "@/pages/admin/AdminOverview";
 import AdminTeam from "@/pages/admin/AdminTeam";
 import ApprovalRules from "@/pages/admin/ApprovalRules";
-import AllExpenses from "@/pages/admin/AllExpenses";
 import SubmitExpense from "@/pages/employee/SubmitExpense";
 import MyExpenses from "@/pages/employee/MyExpenses";
 import PendingApprovals from "@/pages/manager/PendingApprovals";
 import TeamOverview from "@/pages/manager/TeamOverview";
+import FinanceExpenses from "@/pages/finance/FinanceExpenses";
+import CompanyOverview from "@/pages/director/CompanyOverview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,7 +30,6 @@ const DashboardRouter = () => {
         <Route index element={<AdminOverview />} />
         <Route path="team" element={<AdminTeam />} />
         <Route path="rules" element={<ApprovalRules />} />
-        <Route path="expenses" element={<AllExpenses />} />
       </Routes>
     );
   }
@@ -41,6 +43,24 @@ const DashboardRouter = () => {
     );
   }
 
+  if (role === 'finance') {
+    return (
+      <Routes>
+        <Route index element={<PendingApprovals />} />
+        <Route path="all-expenses" element={<FinanceExpenses />} />
+      </Routes>
+    );
+  }
+
+  if (role === 'director') {
+    return (
+      <Routes>
+        <Route index element={<PendingApprovals />} />
+        <Route path="company-overview" element={<CompanyOverview />} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
       <Route index element={<PendingApprovals />} />
@@ -50,8 +70,9 @@ const DashboardRouter = () => {
 };
 
 const ProtectedRoute = () => {
-  const { isLoggedIn } = useRole();
+  const { isLoggedIn, mustChangePassword } = useRole();
   if (!isLoggedIn) return <Navigate to="/" replace />;
+  if (mustChangePassword) return <Navigate to="/change-password" replace />;
   return <AppLayout />;
 };
 
@@ -60,6 +81,8 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
+      <Route path="/setup" element={<SetupPage />} />
+      <Route path="/change-password" element={<ChangePasswordPage />} />
       <Route path="/dashboard/*" element={<ProtectedRoute />}>
         <Route path="*" element={<DashboardRouter />} />
       </Route>

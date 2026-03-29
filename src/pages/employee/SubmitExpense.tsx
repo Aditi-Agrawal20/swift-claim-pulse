@@ -44,7 +44,7 @@ const SubmitExpense = () => {
 
   return (
     <div>
-      <PageHeader title="Submit Expense" subtitle="Upload a receipt or fill manually" gradient="teal" />
+      <PageHeader title="Submit Expense" subtitle="Upload a receipt or fill manually" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Form */}

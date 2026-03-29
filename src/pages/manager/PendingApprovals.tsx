@@ -31,7 +31,7 @@ const PendingApprovals = () => {
 
   return (
     <div>
-      <PageHeader title="Pending Approvals" subtitle={`${expenses.length} expenses awaiting your review`} gradient="blue" />
+      <PageHeader title="Pending Approvals" subtitle={`${expenses.length} expenses awaiting your review`} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <AnimatePresence>
