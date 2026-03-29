@@ -13,7 +13,7 @@ const statusBorder = {
 const MyExpenses = () => {
   return (
     <div>
-      <PageHeader title="My Expenses" subtitle="Track your expense claims" gradient="teal" />
+      <PageHeader title="My Expenses" subtitle="Track your expense claims" />
 
       {/* Summary pills */}
       <div className="flex gap-3 mb-8">

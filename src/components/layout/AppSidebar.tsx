@@ -106,7 +106,7 @@ export const AppSidebar = () => {
           onClick={handleRoleSwitch}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-body transition-all group hover:bg-muted/30"
         >
-          <div className="w-8 h-8 rounded-full flex items-center justify-center ring-2" style={{ ringColor: color, background: `${color}20`, color: color }}>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${color}20`, color: color, boxShadow: `0 0 0 2px ${color}40` }}>
             <span className="text-xs font-bold">{roleLabels[role][0]}</span>
           </div>
           <div className="flex-1 text-left">

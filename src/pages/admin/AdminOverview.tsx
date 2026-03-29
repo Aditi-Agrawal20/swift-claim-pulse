@@ -43,11 +43,7 @@ const weeklyData = [
 const AdminOverview = () => {
   return (
     <div>
-      <PageHeader
-        title="Overview"
-        subtitle="Company expense dashboard"
-        gradient="purple"
-      />
+      <PageHeader title="Overview" subtitle="Company expense dashboard" />
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
