@@ -1,20 +1,27 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { PageHeader } from '@/components/PageHeader';
 import { mockExpenses, mockTeam, formatCurrency } from '@/data/mockData';
+
+const staffData = [
+  { name: 'Jan', amount: 45 },
+  { name: 'Feb', amount: 80 },
+  { name: 'Mar', amount: 75 },
+  { name: 'Apr', amount: 84 },
+  { name: 'May', amount: 62 },
+];
 
 const TeamOverview = () => {
   const totalPending = mockExpenses.filter(e => e.status === 'pending').reduce((s, e) => s + e.convertedAmount, 0);
   const totalApproved = mockExpenses.filter(e => e.status === 'approved').reduce((s, e) => s + e.convertedAmount, 0);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="font-display font-bold text-[28px] gradient-text">Team Overview</h1>
-        <p className="text-muted-foreground text-sm font-body mt-1">Expense summary across your team</p>
-      </div>
+    <div>
+      <PageHeader title="Team Overview" subtitle="Expense summary across your team" gradient="blue" />
 
       {/* Summary pills */}
-      <div className="flex gap-4">
+      <div className="flex gap-4 mb-8">
         {[
           { label: 'Pending Total', value: formatCurrency(totalPending), color: 'text-warning' },
           { label: 'Approved Total', value: formatCurrency(totalApproved), color: 'text-success' },
@@ -32,6 +39,31 @@ const TeamOverview = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Staff activity chart */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="card-surface rounded-xl p-5 mb-8"
+      >
+        <h3 className="font-display font-medium text-[15px] text-foreground mb-1">Monthly Activity</h3>
+        <p className="text-xs text-muted-foreground mb-4">Expense submissions per month (%)</p>
+        <ResponsiveContainer width="100%" height={120}>
+          <BarChart data={staffData}>
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'hsl(215, 15%, 55%)' }} />
+            <Tooltip
+              contentStyle={{
+                background: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                borderRadius: '8px',
+                fontSize: '12px',
+              }}
+            />
+            <Bar dataKey="amount" fill="hsl(210, 70%, 55%)" radius={[4, 4, 0, 0]} barSize={28} opacity={0.8} />
+          </BarChart>
+        </ResponsiveContainer>
+      </motion.div>
 
       {/* Table */}
       <motion.div
